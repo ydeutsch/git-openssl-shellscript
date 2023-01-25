@@ -34,8 +34,8 @@ BUILDDIR=${BUILDDIR:-$(mktemp -d)}
 mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 
-if [[ "${OLD_RELEASES}" != "YES" ]]; then
-  sed -i 's/archive\./old-releases\./' /etc/apt/sources.list
+if [[ "${OLD_RELEASES}" == "YES" ]]; then
+  sudo sed -i 's/archive\./old-releases\./' /etc/apt/sources.list
 fi
 
 # Download the source tarball from GitHub
