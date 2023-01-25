@@ -1,6 +1,17 @@
 ---
 version: "3"
 services:
+  ubuntu_12.04:
+    build:
+      dockerfile: Dockerfile.ubuntu
+      args:
+        UBUNTU_VERSION: "12.04"
+    volumes:
+      - "../compile-git-with-openssl.sh:/home/git-user/compile-git-with-openssl.sh:ro"
+    command:
+      - "./compile-git-with-openssl.sh"
+      - "--skip-test"
+      - "--old-releases"
   ubuntu_14.04:
     build:
       dockerfile: Dockerfile.ubuntu

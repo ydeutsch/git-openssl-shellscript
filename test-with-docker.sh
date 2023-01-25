@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 # Utilize concurrency to build all the docker containers we'll use to test with
 # - https://wiki.ubuntu.com/Releases
 if [ "${#}" -eq 0 ]; then
-  declare -a ubuntu_versions=("20.04" "18.04" "16.04" "14.04")
+  declare -a ubuntu_versions=("20.04" "18.04" "16.04" "14.04" "12.04")
 else
   declare -a ubuntu_versions=(${@})
 fi

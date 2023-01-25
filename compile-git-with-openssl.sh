@@ -4,10 +4,15 @@ set -eu
 SKIPTESTS=
 BUILDDIR=
 SKIPINSTALL=
+OLD_RELEASES=
 for i in "$@"; do 
   case $i in 
     -skiptests|--skip-tests) # Skip tests portion of the build
     SKIPTESTS=YES
+    shift
+    ;;
+    -oldreleases|--old-releases) # Use old-releases instead of archive in /etc/apt/sources.list
+    OLD_RELEASES=YES
     shift
     ;;
     -d=*|--build-dir=*) # Specify the directory to use for the build
@@ -29,10 +34,16 @@ BUILDDIR=${BUILDDIR:-$(mktemp -d)}
 mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 
+if [[ "${OLD_RELEASES}" != "YES" ]]; then
+  sed -i 's/archive\./old-releases\./' /etc/apt/sources.list
+fi
+
 # Download the source tarball from GitHub
 sudo apt-get update
-sudo apt-get install curl jq -y
-git_tarball_url="$(curl --retry 5 "https://api.github.com/repos/git/git/tags" | jq -r '.[0].tarball_url')"
+sudo apt-get install curl -y
+#git_tarball_url="$(curl --retry 5 "https://api.github.com/repos/git/git/tags" | jq -r '.[0].tarball_url')"
+# Using a slightly older version before the C99 compat was introduced into git
+git_tarball_url="https://api.github.com/repos/git/git/tarball/refs/tags/v2.34.1"
 curl -L --retry 5 "${git_tarball_url}" --output "git-source.tar.gz"
 tar -xf "git-source.tar.gz" --strip 1
 
